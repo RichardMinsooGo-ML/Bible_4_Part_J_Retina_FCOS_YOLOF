@@ -49,7 +49,6 @@ def parse_args():
     return parser.parse_args()
 
 
-
 def plot_bbox_labels(img, bbox, label=None, cls_color=None, text_scale=0.4):
     x1, y1, x2, y2 = bbox
     x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)

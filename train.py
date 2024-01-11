@@ -55,7 +55,7 @@ def parse_args():
     parser.add_argument('--save_folder', default='weights/', type=str, 
                         help='path to save weight')
     parser.add_argument('--eval_epoch', type=int,
-                            default=2, help='interval between evaluations')
+                            default=5, help='interval between evaluations')
 
     # model
     parser.add_argument('-v', '--version', default='yolof18', type=str,

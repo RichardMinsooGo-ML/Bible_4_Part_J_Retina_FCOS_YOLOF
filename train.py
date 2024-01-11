@@ -203,10 +203,12 @@ def train():
 
     t0 = time.time()
     # start training loop
-    for epoch in range(start_epoch, max_epoch):
+    # for epoch in range(start_epoch, max_epoch):
+    for epoch in range(5):
         if args.distributed:
             dataloader.batch_sampler.sampler.set_epoch(epoch)            
 
+        start_time = time.time()
         # train one epoch
         for iter_i, (images, targets, masks) in enumerate(dataloader):
             ni = iter_i + epoch * epoch_size
@@ -246,7 +248,7 @@ def train():
             optimizer.zero_grad()
 
             # display
-            if distributed_utils.is_main_process() and iter_i % 10 == 0:
+            if distributed_utils.is_main_process() and (iter_i+1) % int(epoch_size /10) == 0:
                 t1 = time.time()
                 cur_lr = [param_group['lr']  for param_group in optimizer.param_groups]
                 cur_lr_dict = {'lr': cur_lr[0], 'lr_bk': cur_lr[1]}
@@ -256,7 +258,7 @@ def train():
                 )
                 # basic infor
                 log =  '[Epoch: {}/{}]'.format(epoch+1, max_epoch)
-                log += '[Iter: {}/{}]'.format(iter_i, epoch_size)
+                log += '[Iter: {}/{}]'.format(iter_i+1, epoch_size)
                 log += '[lr: {:.6f}][lr_bk: {:.6f}]'.format(cur_lr_dict['lr'], cur_lr_dict['lr_bk'])
                 # loss infor
                 for k in loss_dict_reduced.keys():
@@ -272,6 +274,7 @@ def train():
                 
                 t0 = time.time()
 
+        print("Epoch", epoch+1 ,":" , int( time.time() - start_time ), "sec")
         lr_scheduler.step()
         
         # evaluation
